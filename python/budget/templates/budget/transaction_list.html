@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+</head>
+<body>
+    <h1>Money Table</h1>
+    <div>
+        <a href="/login"><button id="login">Login</button></a>
+        <a href="/logout"><button id="logout">Logout</button></a>
+    </div>
+    <div>
+        <a href="/transaction/create"><button id="button1">Add Transaction</button></a>
+    </div>
+    <table id="table2">
+        <tr>
+            <th>cat</th>
+            <th>Business</th>
+            <th>Amount</th>
+            <th>FromBank</th>
+            <th>Date</th>
+        </tr>
+        {% for collumn in object_list%}
+        <tr>
+            <td>{{collumn.cat}}</td>
+            <td><a href="/transaction/{{collumn.id}}/update/">{{collumn.business}}</a></td>
+            <td>{{collumn.amount}}</td>
+            <td>{{collumn.fromBank}}</td>
+            <td>{{collumn.date}}</td>
+            <td><a href="/transaction/{{collumn.id}}/delete/">Delete {{collumn.business}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <a href="/">BACK</a>
+    </div>
+</body>
+</html>

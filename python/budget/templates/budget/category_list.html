@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+</head>
+<body>
+    <h1>Money Table</h1>
+    <div>
+        <a href="/login"><button id="login">Login</button></a>
+        <a href="/logout"><button id="logout">Logout</button></a>
+    </div>
+    <div>
+        <a href="/transaction"><button id="Transactions">Transactions</button></a>
+        <a href="/bank"><button id="Banks">Banks</button></a>
+    </div>
+    <div>
+        <a href="/category/create"><button id="button1">Add Category</button></a>
+    </div>
+    <table id="table1">
+        <tr>
+            <th>Category</th>
+            <th>Planned</th>
+            <th>Spent</th>
+            <th>Remaining</th>
+        </tr>
+        {% for collumn in object_list%}
+        <tr>
+            <td><a href="/category/{{collumn.id}}/update/">{{collumn.name}}</a></td>
+            <td>{{collumn.planned}}</td>
+            <td>{{collumn.spent}}</td>
+            <td>{{collumn.remaining}}</td>
+            <td><a href="/category/{{collumn.id}}/delete/">Delete {{collumn.name}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <iframe src="http://localhost:3000/api/balanceall" width="1px" height="1px"></iframe>
+    <iframe src="http://localhost:3000/api/transactions" width="1px" height="1px"></iframe>
+</body>
+</html>

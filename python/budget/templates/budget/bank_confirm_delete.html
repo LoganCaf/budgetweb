@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+</head>
+<body>
+    <h1>Delete</h1>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input class="delete" type="submit" value="Are You Sure You Want To Delete {{object}}?">
+        </form>
+    </div>
+    <div>
+        <a href="/">NO</a>
+    </div>
+</body>
+</html>

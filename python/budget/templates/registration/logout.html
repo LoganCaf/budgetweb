@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+</head>
+<body>
+    <h1>Logout</h1>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Logout?">
+        </form>
+    </div>
+</body>
+</html>

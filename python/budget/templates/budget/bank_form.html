@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+    <script src = "{% static 'budget/plaidlink.js' %}"></script>
+</head>
+<body>
+    <h1>Money Table</h1>
+    <a href="/bank"><input type="submit" value="Save"></a>
+    <div>
+        <iframe src="http://localhost:3000" width="600px" height="600px"></iframe>
+        <iframe src="http://localhost:3000/api/balance" width="1px" height="1px"></iframe>
+        <iframe src="http://localhost:3000/api/transactions" width="1px" height="1px"></iframe>
+    </div>
+    <div>
+        <a href="/">BACK</a>
+    </div>
+</body>
+</html>

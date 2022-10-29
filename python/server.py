@@ -47,13 +47,17 @@ from datetime import datetime
 from datetime import timedelta
 import plaid
 import base64
-import os
 import datetime
 import json
 import time
 from dotenv import load_dotenv
 from werkzeug.wrappers import response
 load_dotenv()
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djWebMoney.settings')
+import django
+django.setup()
+from budget.models import bank, transaction, business
 
 
 app = Flask(__name__)
@@ -161,7 +165,7 @@ def create_link_token_for_payment():
         )
         response = client.payment_initiation_recipient_create(
             request)
-        recipient_id = response['recipient_id']
+        recipient_id = response['reciprintpient_id']
 
         request = PaymentInitiationPaymentCreateRequest(
             recipient_id=recipient_id,
@@ -264,12 +268,10 @@ def get_auth():
 # Retrieve Transactions for an Item
 # https://plaid.com/docs/#transactions
 
-
 @app.route('/api/transactions', methods=['GET'])
 def get_transactions():
     # Set cursor to empty to receive all historical updates
     cursor = ''
-
     # New transaction updates since "cursor"
     added = []
     modified = []
@@ -277,23 +279,54 @@ def get_transactions():
     has_more = True
     try:
         # Iterate through each page of new transaction updates for item
-        while has_more:
-            request = TransactionsSyncRequest(
-                access_token=access_token,
-                cursor=cursor,
-            )
-            response = client.transactions_sync(request).to_dict()
-            # Add this page of results
-            added.extend(response['added'])
-            modified.extend(response['modified'])
-            removed.extend(response['removed'])
-            has_more = response['has_more']
-            # Update cursor to the next cursor
-            cursor = response['next_cursor']
-            pretty_print_response(response)
-
+        for bnk in bank.objects.filter(key!=no):
+            cursor = ''
+            # New transaction updates since "cursor"
+            added = []
+            modified = []
+            removed = [] # Removed transaction ids
+            has_more = True
+            while has_more:
+                request = TransactionsSyncRequest(
+                    access_token=bnk.key,
+                    cursor=cursor,
+                )
+                response = client.transactions_sync(request).to_dict()
+                # Add this page of results
+                added.extend(response['added'])
+                modified.extend(response['modified'])
+                removed.extend(response['removed'])
+                has_more = response['has_more']
+                # Update cursor to the next cursor
+                cursor = response['next_cursor']
+                pretty_print_response(response)
+            added_transactions = sorted(added, key=lambda t: t['date'])
+            modified_transactions = sorted(modified, key=lambda t: t['date'])
+            removed_transactions = sorted(removed, key=lambda t: t['date'])
+            for trans in added_transactions:
+                if len(transaction.objects.filter(transid=trans['transaction_id'])) == 0:
+                    named = trans['merchant_name']
+                    if named == '': named = trans['name']
+                    if len(business.objects.filter(name=named,user=bnk.user)) == 0:
+                            business(name=named,user=bnk.user).save()
+                    cated = business.objects.filter(name=named,user=bnk.user).first().cat
+                    transaction(cat=cated,transid=trans['transaction_id'],date=trans['date'],amount=trans['amount'],business=business.objects.filter(name=named,user=bnk.user).first(),fromBank=bnk).save()
+            for trans in modified_transactions:
+                named = trans['merchant_name']
+                if named == '': named = trans['name']
+                if len(business.objects.filter(name=named,user=bnk.user)) == 0:
+                        business(name=named,user=bnk.user).save()
+                cated = business.objects.filter(name=named,user=bnk.user).first().cat
+                if len(transaction.objects.filter(transid=trans['transaction_id'])) != 0:
+                    transaction.objects.filter(transid=trans['transaction_id']).update(cat=cated,date=trans['date'],amount=trans['amount'],business=business.objects.filter(name=named,user=bnk.user).first(),fromBank=bnk)
+                else:
+                    transaction(cat=cated,transid=trans['transaction_id'],date=trans['date'],amount=trans['amount'],business=business.objects.filter(name=named,user=bnk.user).first(),fromBank=bnk).save()
+            for trans in removed_transactions:
+                if len(transaction.objects.filter(transid=trans['transaction_id'])) != 0:
+                    transaction.objects.filter(transid=trans['transaction_id']).delete()
+                    
         # Return the 8 most recent transactions
-        latest_transactions = sorted(added, key=lambda t: t['date'])[-8:]
+        latest_transactions = sorted(added, key=lambda t: t['date'])[:10]
         return jsonify({
             'latest_transactions': latest_transactions})
 
@@ -333,11 +366,39 @@ def get_balance():
         )
         response = client.accounts_balance_get(request)
         pretty_print_response(response.to_dict())
+        for b in response.to_dict()['accounts']:
+            if len(bank.objects.filter(bnkid=b['account_id'])) != 0:
+                bank.objects.filter(bnkid=b['account_id']).update(balance=b['balances']['available'])
+            else:
+                bank(name=b['name'], bnkid=b["account_id"], balance=b['balances']['available'], key=access_token, actype=b['type']).save()
         return jsonify(response.to_dict())
     except plaid.ApiException as e:
         error_response = format_error(e)
         return jsonify(error_response)
 
+@app.route('/api/balanceall', methods=['GET'])
+def get_balanceall():
+    try:
+        for bnk in bank.objects.filter(key!=no):
+            request = AccountsBalanceGetRequest(
+                access_token=bnk.key
+            )
+            response = client.accounts_balance_get(request)
+            pretty_print_response(response.to_dict())
+            
+            for b in response.to_dict()['accounts']:
+                if len(bank.objects.filter(bnkid=b['account_id'])) != 0:
+                    bank.objects.filter(bnkid=b['account_id']).update(balance=b['balances']['available'])
+                else:
+                    bank(name=b['name'], bnkid=b["account_id"], balance=b['balances']['available'], key=access_token, actype=b['type']).save()
+        #print(bank.objects.first.to_dict())
+        if len(bank.objects.all()) >0:
+            return jsonify(response.to_dict())
+        else:
+            return jsonify({'error': 'no banks'})
+    except plaid.ApiException as e:
+        error_response = format_error(e)
+        return jsonify(error_response)
 
 # Retrieve an Item's accounts
 # https://plaid.com/docs/#accounts

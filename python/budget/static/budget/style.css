@@ -1,0 +1,30 @@
+*{
+    color: black;
+    text-align: center;
+}
+div{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+th, td {
+    border: 1px solid;
+    width: 100px;
+    
+}
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+input{
+    width: 100px;
+    background-color: white;
+    border: 1 px solid #000;
+    vertical-align: middle;
+}
+
+.delete{
+    width: 400px;
+    color: red;
+}
