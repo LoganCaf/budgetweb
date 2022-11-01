@@ -18,6 +18,9 @@
     <div>
         <a href="/transaction/create"><button id="button1">Add Transaction</button></a>
     </div>
+    <div>
+        <a href="/">BACK?</a>
+    </div>
     <table id="table2">
         <tr>
             <th>Business</th>
@@ -25,7 +28,7 @@
             <th>FromBank</th>
             <th>Date</th>
         </tr>
-        {% for collumn in object.transaction_set.all%}
+        {% for collumn in object.cat.all%}
         <tr>
             <td><a href="/transaction/{{collumn.id}}/update/">{{collumn.business}}</a></td>
             <td>{{collumn.amount}}</td>
@@ -34,9 +37,26 @@
             <td><a href="/transaction/{{collumn.id}}/delete/">Delete {{collumn.business}}</a></td>
         </tr>
         {% endfor %}
-    </table>
-    <div>
-        <a href="/">CANCEL?</a>
-    </div>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>FromHere</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Business</th>
+            <th>Amount</th>
+            <th>FromBank</th>
+            <th>Date</th>
+        </tr>
+        {% for collumn in object.fromCat.all%}
+        <tr>
+            <td><a href="/transaction/{{collumn.id}}/update/">{{collumn.business}}</a></td>
+            <td>{{collumn.amount}}</td>
+            <td>{{collumn.fromBank}}</td>
+            <td>{{collumn.date}}</td>
+            <td><a href="/transaction/{{collumn.id}}/delete/">Delete {{collumn.business}}</a></td>
+        </tr>
+        {% endfor %}
 </body>
 </html>

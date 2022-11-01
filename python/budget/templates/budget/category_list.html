@@ -15,10 +15,25 @@
     <div>
         <a href="/transaction"><button id="Transactions">Transactions</button></a>
         <a href="/bank"><button id="Banks">Banks</button></a>
+        <a href="/business"><button id="Business">Business</button></a>
     </div>
     <div>
         <a href="/category/create"><button id="button1">Add Category</button></a>
     </div>
+
+    <table id="tablepre">
+        <tr>
+            <th>User</th>
+            <th>Balance</th>
+            <th>Balance Off By</th>
+        </tr>
+        <tr>
+            <td>{{object_list.first.user}}</td>
+            {{ can_show_distribute }}
+            <td>{{allBalance}}</td>
+            <td>{{allRemaining}}</td>
+        </tr>
+    </table>
     <table id="table1">
         <tr>
             <th>Category</th>
@@ -36,7 +51,7 @@
         </tr>
         {% endfor %}
     </table>
-    <iframe src="http://localhost:3000/api/balanceall" width="1px" height="1px"></iframe>
-    <iframe src="http://localhost:3000/api/transactions" width="1px" height="1px"></iframe>
+    <iframe src="http://10.30.30.16:3000/api/balanceall" width="1px" height="1px"></iframe>
+    <iframe src="http://10.30.30.16:3000/api/transactions" width="1px" height="1px"></iframe>
 </body>
 </html>

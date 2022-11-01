@@ -11,14 +11,21 @@
 </head>
 <body>
     <h1>Money Table</h1>
-    <a href="/bank"><input type="submit" value="Save"></a>
     <div>
-        <iframe src="http://localhost:3000" width="600px" height="600px"></iframe>
-        <iframe src="http://localhost:3000/api/balance" width="1px" height="1px"></iframe>
-        <iframe src="http://localhost:3000/api/transactions" width="1px" height="1px"></iframe>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Make">
+        </form>
+    </div>
+    <a href="/bank/create"><input type="submit" value="Save"></a>
+    <div>
+        <a href="/bank">BACK</a>
     </div>
     <div>
-        <a href="/">BACK</a>
+        <iframe src="http://10.30.30.16:3000" width="600px" height="600px"></iframe>
+        <iframe src="http://10.30.30.16:3000/api/balance" width="1px" height="1px"></iframe>
+        <iframe src="http://10.30.30.16:3000/api/transactions" width="1px" height="1px"></iframe>
     </div>
 </body>
 </html>

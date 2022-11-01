@@ -68,9 +68,6 @@ services:
       - type: bind
         source: ./python/db.sqlite3
         target: /opt/app/python/db.sqlite3
-      - type: bind
-        source: ./test
-        target: /opt/app/python/test
     ports: ["8000:8000"]
     environment:
       <<: *QUICKSTART_ENVIRONMENT

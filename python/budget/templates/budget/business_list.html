@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Budget</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'budget/style.css' %}">
+</head>
+<body>
+    <h1>Money Table</h1>
+    <div>
+        <a href="/login"><button id="login">Login</button></a>
+        <a href="/logout"><button id="logout">Logout</button></a>
+    </div>
+    <table id="table2">
+        <tr>
+            <th>Name</th>
+            <th>cat</th>
+        </tr>
+        {% for collumn in object_list%}
+        <tr>
+            <td><a href="/business/{{collumn.id}}/update/">{{collumn.name}}</a></td>
+            <td>{{collumn.cat}}</td>
+            <td><a href="/business/{{collumn.id}}/delete/">Delete {{collumn.name}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <a href="/">BACK</a>
+    </div>
+</body>
+</html>

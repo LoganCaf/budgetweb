@@ -22,7 +22,7 @@
         </tr>
         {% for collumn in object_list%}
         <tr>
-            <td>{{collumn.name}}</td>
+            <td><a href="/bank/{{collumn.id}}/detail/">{{collumn.name}}</a></td>
             <td>{{collumn.balance}}</td>
             <td><a href="/bank/{{collumn.id}}/delete/">Delete {{collumn.name}}</a></td>
         </tr>

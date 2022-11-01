@@ -13,4 +13,8 @@ urlpatterns = [
     path('bank/', views.bankListView.as_view(), name='bank-home'),
     path('bank/create/', views.bankCreateView.as_view(), name='bank-create'),
     path('bank/<int:pk>/delete/', views.bankDeleteView.as_view(), name='bank-delete'),
+    path('bank/<int:pk>/detail/', views.bankDetailView.as_view(), name='bank-detail'),
+    path('business/', views.businessListView.as_view(), name='business-list'),
+    path('business/<int:pk>/update/', views.businessUpdateView.as_view(), name='business-update'),
+    path('business/<int:pk>/delete/', views.businessDeleteView.as_view(), name='business-delete'),
 ]

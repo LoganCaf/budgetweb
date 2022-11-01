@@ -25,7 +25,7 @@ SECRET_KEY = 'jw4**01z)#ro4-&%g27xy)54w@lizw0_2ufaquc2no)37x#zq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost","http://10.30.30.16:7000","127.0.0.1"]
+ALLOWED_HOSTS = ["localhost","10.30.30.16","127.0.0.1","budget.autoware.tk"]
 
 
 # Application definition
@@ -111,7 +111,7 @@ TIME_ZONE = 'MST'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
